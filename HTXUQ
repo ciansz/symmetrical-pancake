@@ -2,7 +2,7 @@ local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
 local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
-local Window = Library:CreateWindow({ Title = '                     $ Mad.lol | Beta $                     ', AutoShow = true, TabPadding = 15, MenuFadeTime = 0.2 })
+local Window = Library:CreateWindow({ Title = '                     $ cia.lol | Beta $                     ', AutoShow = true, TabPadding = 15, MenuFadeTime = 0.2 })
 local Tabs = { Main = Window:AddTab('Main'), Character = Window:AddTab('Character'), Visuals = Window:AddTab('Visuals'), Misc = Window:AddTab('Misc'), Players = Window:AddTab('Players'), ['UI Settings'] = Window:AddTab('UI Settings') }
 local GunMods = Tabs.Main:AddRightGroupbox('Gun Mods')
 local KillAura = Tabs.Main:AddRightGroupbox('Combat')
@@ -4685,7 +4685,7 @@ local WatermarkConnection = RunService.RenderStepped:Connect(function()
     local UptimeFormatted = string.format("%02d:%02d", math.floor(Uptime / 60), Uptime % 60)
     local GameName = getGameName(game.PlaceId)
 
-    Library:SetWatermark(("[ Mad.lol ] | $ Beta $ |  %s | %s (%d) | Uptime: %s | FPS %d | %d ms"):format(
+    Library:SetWatermark(("[ cia.lol ] | $ Beta $ |  %s | %s (%d) | Uptime: %s | FPS %d | %d ms"):format(
         Executor, GameName, game.PlaceId, UptimeFormatted, math.floor(FPS), Ping
     ))
 end)
