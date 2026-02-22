@@ -585,15 +585,15 @@ end)
 
 local killSayEnabled = false
 local killSayMessages = {
-    "mad.lol is a free script and u die to it..", 
-    "Must be hard without mad.lol 💔", 
+    "cia.lol is a free script and u die to it..", 
+    "Must be hard without cia.lol 💔", 
     "Why aim when mad.lol does it for you?",
-    "Bros not on mad.lol already 😂",
+    "Bros not on cia.lol already 😂",
     "Cant be me icl",
-    "cant win a hvh? maybe try /madlolhvh",
-    "if u wanna win hop in /madlolhvh",
-    "hey come on if u cant win get mad . lol",
-    "how to win a hvh? step 1 get mad . lol"
+    "cant win a hvh? maybe try /https://discord.gg/vg44hVKTjT",
+    "if u wanna win hop in /https://discord.gg/vg44hVKTjT",
+    "hey come on if u cant win get cialol",
+    "how to win a hvh? step 1 get cia.lol"
 }
 
 TargetingGroup:AddToggle("killsay", { 
