@@ -2,7 +2,7 @@ local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
 local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
-local Window = Library:CreateWindow({ Title = '                     $ cia.lol | Beta $                     ', AutoShow = true, TabPadding = 15, MenuFadeTime = 0.2 })
+local Window = Library:CreateWindow({ Title = '                     $ cian.lol | Beta $                     ', AutoShow = true, TabPadding = 15, MenuFadeTime = 0.2 })
 local Tabs = { Main = Window:AddTab('Main'), Character = Window:AddTab('Character'), Visuals = Window:AddTab('Visuals'), Misc = Window:AddTab('Misc'), Players = Window:AddTab('Players'), ['UI Settings'] = Window:AddTab('UI Settings') }
 local GunMods = Tabs.Main:AddRightGroupbox('Gun Mods')
 local KillAura = Tabs.Main:AddRightGroupbox('Combat')
@@ -585,15 +585,15 @@ end)
 
 local killSayEnabled = false
 local killSayMessages = {
-    "cia.lol is a free script and u die to it..", 
-    "Must be hard without cia.lol 💔", 
-    "Why aim when mad.lol does it for you?",
-    "Bros not on cia.lol already 😂",
+    "cian.lol is a free script and u die to it..", 
+    "Must be hard without cian.lol 💔", 
+    "Why aim when cian.lol does it for you?",
+    "Bros not on cian.lol already 😂",
     "Cant be me icl",
-    "cant win a hvh? maybe try /https://discord.gg/vg44hVKTjT",
-    "if u wanna win hop in /https://discord.gg/vg44hVKTjT",
-    "hey come on if u cant win get cialol",
-    "how to win a hvh? step 1 get cia.lol"
+    "cant win a hvh? maybe try /https://discord.gg/nwCTDKB6X3",
+    "if u wanna win hop in /https://discord.gg/nwCTDKB6X3",
+    "hey come on if u cant win get cian.lol",
+    "how to win a hvh? step 1 get cian.lol"
 }
 
 TargetingGroup:AddToggle("killsay", { 
@@ -4685,7 +4685,7 @@ local WatermarkConnection = RunService.RenderStepped:Connect(function()
     local UptimeFormatted = string.format("%02d:%02d", math.floor(Uptime / 60), Uptime % 60)
     local GameName = getGameName(game.PlaceId)
 
-    Library:SetWatermark(("[ cia.lol ] | $ Beta $ |  %s | %s (%d) | Uptime: %s | FPS %d | %d ms"):format(
+    Library:SetWatermark(("[ cian.lol ] | $ Beta $ |  %s | %s (%d) | Uptime: %s | FPS %d | %d ms"):format(
         Executor, GameName, game.PlaceId, UptimeFormatted, math.floor(FPS), Ping
     ))
 end)
