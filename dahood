@@ -6,47 +6,24 @@ local Win = GlassUI.new({
     ToggleKey  = Enum.KeyCode.End,
 })
 
--- Background image in its own ScreenGui behind the UI
-local bgGui = Instance.new("ScreenGui")
-bgGui.Name = "CianBG"
-bgGui.ResetOnSpawn = false
-bgGui.DisplayOrder = 9
-bgGui.IgnoreGuiInset = true
-local ok = pcall(function() bgGui.Parent = game:GetService("CoreGui") end)
-if not ok then bgGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") end
-
-local bgFrame = Instance.new("Frame")
-bgFrame.BackgroundTransparency = 1
-bgFrame.BorderSizePixel = 0
-bgFrame.Parent = bgGui
-
-local bgImg = Instance.new("ImageLabel")
-bgImg.Size = UDim2.new(1, 0, 1, 0)
-bgImg.BackgroundTransparency = 1
-bgImg.Image = "rbxassetid://443075613"
-bgImg.ImageTransparency = 0
-bgImg.ScaleType = Enum.ScaleType.Crop
-bgImg.Parent = bgFrame
-
--- Set initial size/position from the actual rendered position
+-- Set background image directly
 task.wait()
-local ap = Win._win.AbsolutePosition
-local as = Win._win.AbsoluteSize
-bgFrame.Size = UDim2.fromOffset(as.X, as.Y)
-bgFrame.Position = UDim2.fromOffset(ap.X, ap.Y)
-
--- Sync when window moves or resizes
-Win._win:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
-    local p = Win._win.AbsolutePosition
-    bgFrame.Position = UDim2.fromOffset(p.X, p.Y)
-end)
-Win._win:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-    local s = Win._win.AbsoluteSize
-    bgFrame.Size = UDim2.fromOffset(s.X, s.Y)
-end)
-Win._win:GetPropertyChangedSignal("Visible"):Connect(function()
-    bgFrame.Visible = Win._win.Visible
-end)
+local sg = game:GetService("CoreGui"):FindFirstChild("GlassUI_cian.lol")
+    or game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("GlassUI_cian.lol")
+if sg then
+    local win = sg:FindFirstChild("Window")
+    if win then
+        local bg = Instance.new("ImageLabel")
+        bg.Name = "BgImage"
+        bg.Size = UDim2.new(1, 0, 1, 0)
+        bg.BackgroundTransparency = 1
+        bg.Image = "rbxassetid://443075613"
+        bg.ImageTransparency = 0
+        bg.ScaleType = Enum.ScaleType.Crop
+        bg.ZIndex = 0
+        bg.Parent = win
+    end
+end
 
 Win:Notify({ Title = "cian.lol", Message = "Loaded successfully!", Type = "success", Duration = 3 })
 
