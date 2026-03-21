@@ -8,7 +8,7 @@ local Win = GlassUI.new({
 
 Win:Notify({ Title = "cian.lol", Message = "Loaded successfully!", Type = "success", Duration = 3 })
 
--- ── Services ──────────────────────────────────────────────────
+-- ── Services ──────────────────────────────────────────────────h
 local LocalPlayer       = game:GetService("Players").LocalPlayer
 local Players           = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
