@@ -10,21 +10,17 @@ local Win = GlassUI.new({
 local bgGui = Instance.new("ScreenGui")
 bgGui.Name = "CianBG"
 bgGui.ResetOnSpawn = false
-bgGui.DisplayOrder = 9  -- 1 below the main UI (which is 10)
+bgGui.DisplayOrder = 9
 bgGui.IgnoreGuiInset = true
-pcall(function() bgGui.Parent = game:GetService("CoreGui") end)
-if not bgGui.Parent then bgGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") end
+local ok = pcall(function() bgGui.Parent = game:GetService("CoreGui") end)
+if not ok then bgGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") end
 
 local bgFrame = Instance.new("Frame")
 bgFrame.Size = UDim2.new(0, 895, 0, 540)
 bgFrame.Position = UDim2.new(0.5, -447, 0.5, -270)
 bgFrame.BackgroundTransparency = 1
 bgFrame.BorderSizePixel = 0
-bgFrame.ZIndex = 1
 bgFrame.Parent = bgGui
-local bgCorner = Instance.new("UICorner")
-bgCorner.CornerRadius = UDim.new(0, 0)
-bgCorner.Parent = bgFrame
 
 local bgImg = Instance.new("ImageLabel")
 bgImg.Size = UDim2.new(1, 0, 1, 0)
@@ -32,25 +28,9 @@ bgImg.BackgroundTransparency = 1
 bgImg.Image = "rbxassetid://443075613"
 bgImg.ImageTransparency = 0
 bgImg.ScaleType = Enum.ScaleType.Crop
-bgImg.ZIndex = 1
 bgImg.Parent = bgFrame
-local bgImgCorner = Instance.new("UICorner")
-bgImgCorner.CornerRadius = UDim.new(0, 0)
-bgImgCorner.Parent = bgImg
 
--- Dark overlay so text stays readable
-local overlay = Instance.new("Frame")
-overlay.Size = UDim2.new(1, 0, 1, 0)
-overlay.BackgroundColor3 = Color3.new(0, 0, 0)
-overlay.BackgroundTransparency = 0.45
-overlay.BorderSizePixel = 0
-overlay.ZIndex = 2
-overlay.Parent = bgFrame
-local overlayCorner = Instance.new("UICorner")
-overlayCorner.CornerRadius = UDim.new(0, 0)
-overlayCorner.Parent = overlay
-
--- Keep bg in sync with window position when dragged
+-- Sync bg with window when dragged or resized
 Win._win:GetPropertyChangedSignal("Position"):Connect(function()
     bgFrame.Position = Win._win.Position
 end)
