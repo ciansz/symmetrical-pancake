@@ -139,7 +139,7 @@ end
 
 local GameScripts = {
     [77747658251236] = "https://raw.githubusercontent.com/HybridE3/HybridE3/refs/heads/main/Sailor%20Piece",
-    [2788229376]     = "https://raw.githubusercontent.com/ciansz/symmetrical-pancake/refs/heads/main/HTXUQ",
+    [2788229376]     = "https://raw.githubusercontent.com/ciansz/vault/refs/heads/main/dahood",
     [17625359962]    = "https://raw.githubusercontent.com/ZulimaDoma/ZuluGrowAGarden/refs/heads/main/aimbot",
 
     -- Add more below:
