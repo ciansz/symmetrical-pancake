@@ -16,8 +16,6 @@ local ok = pcall(function() bgGui.Parent = game:GetService("CoreGui") end)
 if not ok then bgGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") end
 
 local bgFrame = Instance.new("Frame")
-bgFrame.Size = UDim2.new(0, 895, 0, 540)
-bgFrame.Position = UDim2.new(0.5, -447, 0.5, -270)
 bgFrame.BackgroundTransparency = 1
 bgFrame.BorderSizePixel = 0
 bgFrame.Parent = bgGui
@@ -30,12 +28,21 @@ bgImg.ImageTransparency = 0
 bgImg.ScaleType = Enum.ScaleType.Crop
 bgImg.Parent = bgFrame
 
--- Sync bg with window when dragged or resized
-Win._win:GetPropertyChangedSignal("Position"):Connect(function()
-    bgFrame.Position = Win._win.Position
+-- Set initial size/position from the actual rendered position
+task.wait()
+local ap = Win._win.AbsolutePosition
+local as = Win._win.AbsoluteSize
+bgFrame.Size = UDim2.fromOffset(as.X, as.Y)
+bgFrame.Position = UDim2.fromOffset(ap.X, ap.Y)
+
+-- Sync when window moves or resizes
+Win._win:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
+    local p = Win._win.AbsolutePosition
+    bgFrame.Position = UDim2.fromOffset(p.X, p.Y)
 end)
-Win._win:GetPropertyChangedSignal("Size"):Connect(function()
-    bgFrame.Size = Win._win.Size
+Win._win:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+    local s = Win._win.AbsoluteSize
+    bgFrame.Size = UDim2.fromOffset(s.X, s.Y)
 end)
 Win._win:GetPropertyChangedSignal("Visible"):Connect(function()
     bgFrame.Visible = Win._win.Visible
