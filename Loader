@@ -1,0 +1,186 @@
+--[[
+    Loader
+    Auto-executes the correct script based on the current game
+]]
+
+-- ────────────────────────────────────────────────────────────
+--  LOADING SCREEN
+-- ────────────────────────────────────────────────────────────
+local Players      = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui   = LocalPlayer:WaitForChild("PlayerGui")
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name           = "LoadingScreen"
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ResetOnSpawn   = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent         = PlayerGui
+
+local Background = Instance.new("Frame")
+Background.Size                   = UDim2.new(1, 0, 1, 0)
+Background.BackgroundColor3       = Color3.fromRGB(18, 19, 26)
+Background.BackgroundTransparency = 0.08
+Background.BorderSizePixel        = 0
+Background.ZIndex                 = 1
+Background.Parent                 = ScreenGui
+
+local Title = Instance.new("TextLabel")
+Title.Size                 = UDim2.new(0, 400, 0, 80)
+Title.Position             = UDim2.new(0.5, -200, 0.5, -100)
+Title.BackgroundTransparency = 1
+Title.Text                 = "Loader"
+Title.TextColor3           = Color3.fromRGB(255, 255, 255)
+Title.TextSize             = 58
+Title.Font                 = Enum.Font.GothamBold
+Title.TextTransparency     = 1
+Title.ZIndex               = 10
+Title.Parent               = ScreenGui
+
+local Glow = Instance.new("TextLabel")
+Glow.Size                  = UDim2.new(0, 400, 0, 80)
+Glow.Position              = UDim2.new(0.5, -200, 0.5, -100)
+Glow.BackgroundTransparency = 1
+Glow.Text                  = "Loader"
+Glow.TextColor3            = Color3.fromRGB(220, 220, 220)
+Glow.TextSize              = 58
+Glow.Font                  = Enum.Font.GothamBold
+Glow.TextTransparency      = 0.85
+Glow.ZIndex                = 9
+Glow.Parent                = ScreenGui
+
+local Divider = Instance.new("Frame")
+Divider.Size                   = UDim2.new(0, 0, 0, 1)
+Divider.Position               = UDim2.new(0.5, 0, 0.5, -18)
+Divider.BackgroundColor3       = Color3.fromRGB(255, 255, 255)
+Divider.BackgroundTransparency = 0.3
+Divider.BorderSizePixel        = 0
+Divider.ZIndex                 = 10
+Divider.AnchorPoint            = Vector2.new(0.5, 0.5)
+Divider.Parent                 = ScreenGui
+
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size                 = UDim2.new(0, 400, 0, 40)
+StatusLabel.Position             = UDim2.new(0.5, -200, 0.5, 10)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text                 = ""
+StatusLabel.TextColor3           = Color3.fromRGB(255, 255, 255)
+StatusLabel.TextSize             = 16
+StatusLabel.Font                 = Enum.Font.Gotham
+StatusLabel.TextTransparency     = 1
+StatusLabel.ZIndex               = 10
+StatusLabel.Parent               = ScreenGui
+
+-- Animate title in
+TweenService:Create(Title, TweenInfo.new(0.6, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+TweenService:Create(Glow,  TweenInfo.new(0.6, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0.75}):Play()
+
+task.delay(0.4, function()
+    TweenService:Create(Divider, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 260, 0, 1)}):Play()
+end)
+
+local messages     = { "Detecting Game", "Bypassing", "Loading GUI" }
+local messageIndex = 1
+local animating    = true
+local dotAnimating = false
+
+local function animateDots(baseText)
+    dotAnimating = true
+    local dotStates = { ".", "..", "..." }
+    local i = 1
+    while dotAnimating do
+        if not StatusLabel or not StatusLabel.Parent then break end
+        StatusLabel.Text = baseText .. dotStates[i]
+        i = i + 1
+        if i > #dotStates then i = 1 end
+        task.wait(0.22)
+    end
+end
+
+local function showNextMessage()
+    while animating do
+        local base = messages[messageIndex]
+        if not StatusLabel or not StatusLabel.Parent then break end
+
+        StatusLabel.Position         = UDim2.new(0.5, -200, 0.5, 10)
+        StatusLabel.TextTransparency = 1
+        StatusLabel.Text             = base .. "."
+
+        TweenService:Create(StatusLabel, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+            Position         = UDim2.new(0.5, -200, 0.5, -5),
+            TextTransparency = 0,
+        }):Play()
+
+        task.spawn(function() animateDots(base) end)
+        task.wait(1.5)
+        dotAnimating = false
+
+        if not StatusLabel or not StatusLabel.Parent then break end
+        TweenService:Create(StatusLabel, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+            Position         = UDim2.new(0.5, -200, 0.5, -20),
+            TextTransparency = 1,
+        }):Play()
+
+        task.wait(0.35)
+        messageIndex = messageIndex + 1
+        if messageIndex > #messages then messageIndex = 1 end
+    end
+end
+
+task.delay(0.8, function()
+    task.spawn(showNextMessage)
+end)
+
+-- Fade out loading screen
+local function fadeOutLoader()
+    animating    = false
+    dotAnimating = false
+    local fadeOut = TweenInfo.new(0.65, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+    if Title and Title.Parent        then TweenService:Create(Title,       fadeOut, {TextTransparency = 1}):Play() end
+    if Glow and Glow.Parent          then TweenService:Create(Glow,        fadeOut, {TextTransparency = 1}):Play() end
+    if StatusLabel and StatusLabel.Parent then TweenService:Create(StatusLabel, fadeOut, {TextTransparency = 1}):Play() end
+    if Divider and Divider.Parent    then TweenService:Create(Divider,     fadeOut, {BackgroundTransparency = 1}):Play() end
+    if Background and Background.Parent then TweenService:Create(Background,  fadeOut, {BackgroundTransparency = 1}):Play() end
+    task.wait(0.7)
+    if ScreenGui and ScreenGui.Parent then ScreenGui:Destroy() end
+end
+
+-- ────────────────────────────────────────────────────────────
+--  GAME → SCRIPT MAP
+--  [PlaceId] = "raw script url"
+-- ────────────────────────────────────────────────────────────
+local GameScripts = {
+    [77747658251236] = "https://raw.githubusercontent.com/HybridE3/HybridE3/refs/heads/main/Sailor%20Piece",
+    [2788229376]     = "https://raw.githubusercontent.com/ciansz/symmetrical-pancake/refs/heads/main/HTXUQ",
+    [17625359962]    = "https://raw.githubusercontent.com/ZulimaDoma/ZuluGrowAGarden/refs/heads/main/aimbot",
+
+    -- Add more below:
+    -- [PLACE_ID] = "https://raw.githubusercontent.com/.../script.lua",
+}
+
+-- ────────────────────────────────────────────────────────────
+--  WAIT FOR LOADING SCREEN THEN EXECUTE
+-- ────────────────────────────────────────────────────────────
+task.wait(5)
+fadeOutLoader()
+task.wait(0.7) -- wait for fade to finish before executing
+
+local placeId = game.PlaceId
+local url     = GameScripts[placeId]
+
+if url then
+    print("[Loader] Detected PlaceId: " .. tostring(placeId))
+    print("[Loader] Loading script...")
+    local ok, err = pcall(function()
+        loadstring(game:HttpGet(url, true))() -- true = bypass cache
+    end)
+    if ok then
+        print("[Loader] Loaded successfully!")
+    else
+        warn("[Loader] Error: " .. tostring(err))
+    end
+else
+    print("[Loader] No script mapped for PlaceId: " .. tostring(placeId))
+end
