@@ -465,13 +465,11 @@ end })
 local camLockEnabled = false
 local camLockTarget  = nil
 local smoothness     = 0.5
+local camLockKey     = Enum.KeyCode.Q
 
-SecLegit:AddToggle({ Name = "CamLock", Default = false, Callback = function(v)
-    camLockEnabled = v
-    if not v then camLockTarget = nil end
-end })
-SecLegit:AddButton({ Name = "Lock Closest (CamLock)", Callback = function()
-    if not camLockEnabled then Win:Notify({ Title="CamLock", Message="Enable CamLock first", Type="warning", Duration=2 }); return end
+local function doCamLockToggle()
+    if not camLockEnabled then return end
+    if UserInputService:GetFocusedTextBox() then return end
     if camLockTarget then
         camLockTarget = nil
         Win:Notify({ Title="CamLock", Message="Unlocked", Type="info", Duration=2 })
@@ -496,6 +494,25 @@ SecLegit:AddButton({ Name = "Lock Closest (CamLock)", Callback = function()
         if closestPlayer then
             Win:Notify({ Title="CamLock", Message="Locked: "..closestPlayer.Name, Type="success", Duration=2 })
         end
+    end
+end
+
+UserInputService.InputBegan:Connect(function(inp, gp)
+    if gp then return end
+    if inp.KeyCode == camLockKey then doCamLockToggle() end
+end)
+
+SecLegit:AddToggle({ Name = "CamLock", Default = false, Callback = function(v)
+    camLockEnabled = v
+    if not v then camLockTarget = nil end
+end })
+SecLegit:AddTextbox({ Name = "Lock Key (default: Q)", Placeholder = "Q", Default = "Q", ClearOnFocus = false, Callback = function(v)
+    local key = Enum.KeyCode[v:upper()]
+    if key then
+        camLockKey = key
+        Win:Notify({ Title="CamLock", Message="Key set to "..v:upper(), Type="success", Duration=2 })
+    else
+        Win:Notify({ Title="CamLock", Message="Invalid key: "..v, Type="error", Duration=2 })
     end
 end })
 SecLegit:AddTextbox({ Name = "Smoothness", Placeholder = "0.5", Default = "0.5", ClearOnFocus = false, Callback = function(v)
@@ -782,10 +799,30 @@ end })
 SecMovement:AddSlider({ Name = "WalkSpeed",    Min=16,  Max=500,  Default=16,  Suffix="", Callback = function(v) getgenv().walkSpeed   = v end })
 SecMovement:AddSlider({ Name = "JumpPower",    Min=50,  Max=500,  Default=50,  Suffix="", Callback = function(v) getgenv().jumpPower   = v end })
 SecMovement:AddSlider({ Name = "CFrame Speed", Min=1,   Max=200,  Default=10,  Suffix="", Callback = function(v) getgenv().cframeSpeed = v end })
-SecMovement:AddButton({ Name = "Activate WalkSpeed / CFrame", Callback = function()
-    getgenv().walkSpeedKeybindActive   = not getgenv().walkSpeedKeybindActive
-    getgenv().cframeSpeedKeybindActive = not getgenv().cframeSpeedKeybindActive
-    Win:Notify({ Title="Movement", Message=getgenv().walkSpeedKeybindActive and "Activated" or "Deactivated", Type="info", Duration=2 })
+getgenv().movementKey = Enum.KeyCode.T
+
+local function doMovementToggle()
+    if UserInputService:GetFocusedTextBox() then return end
+    if getgenv().walkSpeedEnabled or getgenv().cframeSpeedEnabled then
+        getgenv().walkSpeedKeybindActive   = not getgenv().walkSpeedKeybindActive
+        getgenv().cframeSpeedKeybindActive = not getgenv().cframeSpeedKeybindActive
+        Win:Notify({ Title="Movement", Message=getgenv().walkSpeedKeybindActive and "Activated" or "Deactivated", Type="info", Duration=2 })
+    end
+end
+
+UserInputService.InputBegan:Connect(function(inp, gp)
+    if gp then return end
+    if inp.KeyCode == getgenv().movementKey then doMovementToggle() end
+end)
+
+SecMovement:AddTextbox({ Name = "Speed Toggle Key (default: T)", Placeholder = "T", Default = "T", ClearOnFocus = false, Callback = function(v)
+    local key = Enum.KeyCode[v:upper()]
+    if key then
+        getgenv().movementKey = key
+        Win:Notify({ Title="Movement", Message="Key set to "..v:upper(), Type="success", Duration=2 })
+    else
+        Win:Notify({ Title="Movement", Message="Invalid key: "..v, Type="error", Duration=2 })
+    end
 end })
 
 RunService.RenderStepped:Connect(function()
@@ -846,14 +883,32 @@ local function StopFly()
     if workspace:FindFirstChild("Core") then workspace.Core:Destroy() end
 end
 
+getgenv().flightKey = Enum.KeyCode.K
+
+local function doFlightToggle()
+    if UserInputService:GetFocusedTextBox() then return end
+    if not getgenv().FlightEnabled then return end
+    if getgenv().Flying then StopFly() else StartFly() end
+    Win:Notify({ Title="Flight", Message=getgenv().Flying and "Started" or "Stopped", Type="info", Duration=2 })
+end
+
+UserInputService.InputBegan:Connect(function(inp, gp)
+    if gp then return end
+    if inp.KeyCode == getgenv().flightKey then doFlightToggle() end
+end)
+
 SecFlight:AddToggle({ Name = "Flight", Default = false, Callback = function(v)
     getgenv().FlightEnabled = v
     if not v then StopFly() end
 end })
-SecFlight:AddButton({ Name = "Toggle Flying", Callback = function()
-    if not getgenv().FlightEnabled then Win:Notify({ Title="Flight", Message="Enable Flight first", Type="warning", Duration=2 }); return end
-    if getgenv().Flying then StopFly() else StartFly() end
-    Win:Notify({ Title="Flight", Message=getgenv().Flying and "Started" or "Stopped", Type="info", Duration=2 })
+SecFlight:AddTextbox({ Name = "Fly Toggle Key (default: K)", Placeholder = "K", Default = "K", ClearOnFocus = false, Callback = function(v)
+    local key = Enum.KeyCode[v:upper()]
+    if key then
+        getgenv().flightKey = key
+        Win:Notify({ Title="Flight", Message="Key set to "..v:upper(), Type="success", Duration=2 })
+    else
+        Win:Notify({ Title="Flight", Message="Invalid key: "..v, Type="error", Duration=2 })
+    end
 end })
 SecFlight:AddSlider({ Name = "Fly Speed", Min=10, Max=5000, Default=50, Suffix="", Callback = function(v) getgenv().FlySpeed = v end })
 
@@ -912,8 +967,8 @@ SecAntiAim:AddToggle({ Name = "Anti Aim", Default = false, Callback = function(v
     desync.toggleEnabled = v
     if not v then toggleDesync(false) end
 end })
-SecAntiAim:AddButton({ Name = "Toggle Desync", Callback = function()
-    if not desync.toggleEnabled then Win:Notify({ Title="Anti Aim", Message="Enable Anti Aim first", Type="warning", Duration=2 }); return end
+SecAntiAim:AddKeybind({ Name = "Toggle Desync Key", Default = Enum.KeyCode.V, Callback = function()
+    if not desync.toggleEnabled then return end
     toggleDesync(not desync.enabled)
 end })
 SecAntiAim:AddDropdown({ Name = "Method", Options = {"Destroy Cheaters","Underground","Void Spam","Void"}, Default = "Void", Callback = function(v) desync.mode = v end })
