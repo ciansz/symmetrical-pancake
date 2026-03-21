@@ -1,20 +1,19 @@
 local GlassUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/ciansz/glasslibre/refs/heads/main/Ui"))()
 
 local Win = GlassUI.new({
-    Title     = "cian.lol",
-    Subtitle  = "Beta",
-    ToggleKey = Enum.KeyCode.End,
+    Title      = "cian.lol",
+    Subtitle   = "Beta",
+    ToggleKey  = Enum.KeyCode.End,
 })
 
--- Add background image
+-- Background image
 local bg = Instance.new("ImageLabel")
 bg.Size = UDim2.new(1, 0, 1, 0)
 bg.BackgroundTransparency = 1
 bg.Image = "rbxassetid://162406025"
 bg.ScaleType = Enum.ScaleType.Crop
 bg.ZIndex = 0
-bg.Parent = W._win = Win
-
+bg.Parent = Win._win
 
 Win:Notify({ Title = "cian.lol", Message = "Loaded successfully!", Type = "success", Duration = 3 })
 
