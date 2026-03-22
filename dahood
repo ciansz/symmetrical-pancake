@@ -6,43 +6,7 @@ local Win = GlassUI.new({
     ToggleKey  = Enum.KeyCode.End,
 })
 
--- Set background image directly
-task.wait()
-local sg = game:GetService("CoreGui"):FindFirstChild("GlassUI_cian.lol")
-    or game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("GlassUI_cian.lol")
-if sg then
-    local win = sg:FindFirstChild("Window")
-    if win then
-        -- Remove rounded corners
-        for _, c in ipairs(win:GetDescendants()) do
-            if c:IsA("UICorner") then c:Destroy() end
-        end
-
-        -- Background image
-        local bg = Instance.new("ImageLabel")
-        bg.Name = "BgImage"
-        bg.Size = UDim2.new(1, 0, 1, 0)
-        bg.BackgroundTransparency = 1
-        bg.Image = "rbxassetid://443075613"
-        bg.ImageTransparency = 0
-        bg.ScaleType = Enum.ScaleType.Crop
-        bg.ZIndex = 0
-        bg.Parent = win
-
-        -- UIGradient set to 2 (rotation 90)
-        local grad = Instance.new("UIGradient")
-        grad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
-        })
-        grad.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0, 0.5),
-            NumberSequenceKeypoint.new(1, 0.2),
-        })
-        grad.Rotation = 90
-        grad.Parent = bg
-    end
-end
+Win:Notify({ Title = "cian.lol", Message = "Loaded successfully!", Type = "success", Duration = 3 })
 
 Win:Notify({ Title = "cian.lol", Message = "Loaded successfully!", Type = "success", Duration = 3 })
 
@@ -195,6 +159,7 @@ local TabCharacter = Win:AddTab("Character", "🧍")
 local TabVisuals   = Win:AddTab("Visuals",   "👁")
 local TabMisc      = Win:AddTab("Misc",      "🔧")
 local TabPlayers   = Win:AddTab("Players",   "👥")
+local TabImg       = Win:AddTab("Img",       "🖼")
 
 -- ════════════════════════════════════════════════════════════
 --  MAIN TAB
@@ -1476,4 +1441,36 @@ SecAllActions:AddToggle({ Name="Auto Shoot (Serenity)", Default=false, Callback=
             task.wait(0)
         end
     end) end
+end })
+
+-- ════════════════════════════════════════════════════════════
+--  IMG TAB
+-- ════════════════════════════════════════════════════════════
+local SecImg = TabImg:AddSection("Background Image")
+
+SecImg:AddTextbox({ Name="Put Assetid here", Placeholder="e.g. 443075613", Default="", ClearOnFocus=true, Callback=function(v)
+    if not v or v == "" then return end
+    local id = v:match("%d+") or v
+    local sg = game:GetService("CoreGui"):FindFirstChild("GlassUI_cian.lol")
+        or game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("GlassUI_cian.lol")
+    if sg then
+        local win = sg:FindFirstChild("Window")
+        if win then
+            local existing = win:FindFirstChild("BgImage")
+            if existing then
+                existing.Image = "rbxassetid://" .. id
+            else
+                local bg = Instance.new("ImageLabel")
+                bg.Name = "BgImage"
+                bg.Size = UDim2.new(1, 0, 1, 0)
+                bg.BackgroundTransparency = 1
+                bg.Image = "rbxassetid://" .. id
+                bg.ImageTransparency = 0
+                bg.ScaleType = Enum.ScaleType.Crop
+                bg.ZIndex = 0
+                bg.Parent = win
+            end
+            Win:Notify({ Title="Background", Message="Image set to: "..id, Type="success", Duration=2 })
+        end
+    end
 end })
