@@ -3,7 +3,7 @@ local GlassUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/cians
 local Win = GlassUI.new({
     Title      = "cian.lol",
     Subtitle   = "Beta",
-    ToggleKey  = Enum.KeyCode.End,
+    ToggleKey  = Enum.KeyCode.RightCtrl,
 })
 
 -- Background image
