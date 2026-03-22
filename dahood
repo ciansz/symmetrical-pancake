@@ -1,4 +1,4 @@
-local GlassUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/ciansz/glasslibre/refs/heads/main/Ui"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ciansz/glasslibre/refs/heads/main/Ui"))()
 
 local Win = GlassUI.new({
     Title      = "cian.lol",
